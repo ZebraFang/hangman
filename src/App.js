@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 
 import man7 from "./assets/man/state7.gif";
@@ -7,6 +7,12 @@ import Help from "./components/Help";
 
 function App() {
   const [word, setWord] = useState("");
+
+  // wrong guesses
+  const [wrongGuesses, setWrongGuesses] = useState([]);
+
+  // all guesses
+  const [allGuesses, setAllGuesses] = useState([]);
 
   // Use a side effect to load the dictionary and select a random word
   useEffect(() => {
@@ -43,6 +49,48 @@ function App() {
     getDictionary();
   }, []);
 
+  // This is the function we call each time a key is pressed on the keyboard
+  const handleKeyPress = useCallback(
+    ({ key }) => {
+      console.log({ key });
+
+      // check whether we've guessed this letter before,
+      //  and if already guessed, ignore it!
+      if (allGuesses.includes(key)) {
+        return;
+      }
+
+      // check whether our selected word contains the letter
+      if (word.includes(key)) {
+        // if yes: show the letter in the proper place
+        // TODO: Figure this out!
+        //
+        //
+      } else {
+        // if no:  add it to the wrong guesses
+        setWrongGuesses((prev) => {
+          return [...prev, key];
+        });
+      }
+
+      // always: add it to the guesses list
+      setAllGuesses((prev) => {
+        return [...prev, key];
+      });
+    },
+    [allGuesses, word]
+  );
+
+  // Use a side effect to attach a keyboard event listener so we can capture
+  //  the user input from their keyboard
+  useEffect(() => {
+    document.addEventListener("keypress", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
   return (
     <Box sx={{ p: 5, textAlign: "center" }}>
       <Typography variant="h3" component="h1">
@@ -73,7 +121,7 @@ function App() {
       <Divider sx={{ my: 3 }} />
 
       <Typography variant="h5" component="h3">
-        Guesses (3/10)
+        Guesses ({wrongGuesses.length}/10)
       </Typography>
 
       <Box
@@ -84,15 +132,13 @@ function App() {
           justifyContent: "center",
         }}
       >
-        <Typography variant="h2" component="p">
-          s
-        </Typography>
-        <Typography variant="h2" component="p">
-          g
-        </Typography>
-        <Typography variant="h2" component="p">
-          x
-        </Typography>
+        {wrongGuesses.map((wrongLetter, i) => {
+          return (
+            <Typography key={`wrong-letter-${i}`} variant="h2" component="p">
+              {wrongLetter}
+            </Typography>
+          );
+        })}
       </Box>
     </Box>
   );

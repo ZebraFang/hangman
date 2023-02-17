@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { Box, Button, Typography, Modal, Divider } from "@mui/material";
 
 const style = {
@@ -13,8 +13,8 @@ const style = {
   p: 4,
 };
 
-function App() {
-  const [open, setOpen] = React.useState(false);
+function Help() {
+  const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -53,4 +53,4 @@ function App() {
   );
 }
 
-export default App;
+export default Help;
