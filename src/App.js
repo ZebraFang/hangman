@@ -3,8 +3,13 @@ import { Box, Divider, Typography } from "@mui/material";
 
 import Man from "./components/Man";
 import Help from "./components/Help";
+import YouLost from "./components/YouLost";
 
 function App() {
+  // our dictionary
+  const [words, setWords] = useState([]);
+
+  // our random word
   const [word, setWord] = useState("");
 
   // wrong guesses
@@ -12,6 +17,28 @@ function App() {
 
   // all guesses
   const [allGuesses, setAllGuesses] = useState([]);
+
+  const resetGame = () => {
+    // reset all the state to before any guesses were made
+    setWord("");
+    setWrongGuesses([]);
+    setAllGuesses([]);
+
+    // load a new word
+    pickRandomWord();
+  };
+
+  const pickRandomWord = useCallback(() => {
+    if (words.length) {
+      // pick a random word
+      const wordNumber = Math.round(Math.random() * words.length);
+      const selectedWord = words[wordNumber].toLowerCase();
+
+      // set the state, and begin the game!
+      console.log({ selectedWord });
+      setWord(selectedWord);
+    }
+  }, [words]);
 
   // Use a side effect to load the dictionary and select a random word
   useEffect(() => {
@@ -28,15 +55,11 @@ function App() {
         const withoutHeader = text.split("START\n")[1];
 
         // split the rest of the dictionary into an array we can use
-        const words = withoutHeader.split("\n");
+        const allWords = withoutHeader.split("\n");
 
-        // pick a random word
-        const wordNumber = Math.round(Math.random() * words.length);
-        const selectedWord = words[wordNumber].toLowerCase();
+        setWords(allWords);
 
-        // set the state, and begin the game!
-        console.log({ selectedWord });
-        setWord(selectedWord);
+        pickRandomWord();
 
         //
       } else {
@@ -45,8 +68,10 @@ function App() {
       }
     };
 
-    getDictionary();
-  }, []);
+    if (!word.length) {
+      getDictionary();
+    }
+  }, [word, pickRandomWord]);
 
   // This is the function we call each time a key is pressed on the keyboard
   const handleKeyPress = useCallback(
@@ -97,6 +122,10 @@ function App() {
       </Typography>
 
       <Help />
+
+      {wrongGuesses.length === 10 ? (
+        <YouLost word={word} resetGame={resetGame} />
+      ) : null}
 
       <Man numberOfWrongGuesses={wrongGuesses.length} />
 
