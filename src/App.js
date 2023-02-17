@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 
-import man7 from "./assets/man/state7.gif";
-
+import Man from "./components/Man";
 import Help from "./components/Help";
 
 function App() {
@@ -99,7 +98,7 @@ function App() {
 
       <Help />
 
-      <img src={man7} alt="man" />
+      <Man numberOfWrongGuesses={wrongGuesses.length} />
 
       <Box
         sx={{
