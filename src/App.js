@@ -3,6 +3,7 @@ import { Box, Divider, Typography } from "@mui/material";
 
 import Man from "./components/Man";
 import Help from "./components/Help";
+import YouWon from "./components/YouWon";
 import YouLost from "./components/YouLost";
 
 function App() {
@@ -21,11 +22,16 @@ function App() {
   // all guesses
   const [allGuesses, setAllGuesses] = useState([]);
 
+  // count of correct guesses
+  const [revealedCount, setRevealedCount] = useState(0);
+
   const resetGame = () => {
     // reset all the state to before any guesses were made
     setWord("");
     setWrongGuesses([]);
     setAllGuesses([]);
+    setRevealedCount(0);
+    setSmartWord([]);
 
     // load a new word
     pickRandomWord();
@@ -116,8 +122,20 @@ function App() {
           return element;
         });
 
-        //updating the state
+        // update the state
         setSmartWord(newSmartWord);
+
+        // create a new array of revealed letters
+        const revealedLetters = newSmartWord.filter((element) => {
+          if (element.revealed === true) {
+            return true;
+          }
+
+          return false;
+        });
+
+        // count how many letters have been revealed
+        setRevealedCount(revealedLetters.length);
 
         //
       } else {
@@ -152,6 +170,10 @@ function App() {
       </Typography>
 
       <Help />
+
+      {revealedCount === smartWord.length ? (
+        <YouWon word={word} resetGame={resetGame} />
+      ) : null}
 
       {wrongGuesses.length === 10 ? (
         <YouLost word={word} resetGame={resetGame} />
