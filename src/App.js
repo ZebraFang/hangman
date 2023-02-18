@@ -57,10 +57,6 @@ function App() {
         return { char: letter, revealed: false };
       });
 
-      // TODO: Delete this so we don't reveal the word in the console!
-      console.log({ theWord });
-      console.log({ selectedWord });
-
       setSmartWord(theWord);
       setWord(selectedWord);
     }
