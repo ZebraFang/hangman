@@ -9,8 +9,11 @@ function App() {
   // our dictionary
   const [words, setWords] = useState([]);
 
-  // our random word
+  // our random word (as a string)
   const [word, setWord] = useState("");
+
+  // our word (as a "smart" object)
+  const [smartWord, setSmartWord] = useState([]);
 
   // wrong guesses
   const [wrongGuesses, setWrongGuesses] = useState([]);
@@ -35,7 +38,24 @@ function App() {
       const selectedWord = words[wordNumber].toLowerCase();
 
       // set the state, and begin the game!
+
+      const letters = selectedWord.split("");
+
+      // loop through the letters...
+      const theWord = letters.map((letter) => {
+        // ...and:
+        // create a object for each letter that tells us:
+        //  1. the letter
+        //  2. (boolean) revealed state
+
+        return { char: letter, revealed: false };
+      });
+
+      // TODO: Delete this so we don't reveal the word in the console!
+      console.log({ theWord });
       console.log({ selectedWord });
+
+      setSmartWord(theWord);
       setWord(selectedWord);
     }
   }, [words]);
@@ -86,9 +106,19 @@ function App() {
 
       // check whether our selected word contains the letter
       if (word.includes(key)) {
-        // if yes: show the letter in the proper place
-        // TODO: Figure this out!
-        //
+        // if yes: reveal all the matching letters
+
+        const newSmartWord = smartWord.map((element) => {
+          if (key === element.char) {
+            element.revealed = true;
+          }
+
+          return element;
+        });
+
+        //updating the state
+        setSmartWord(newSmartWord);
+
         //
       } else {
         // if no:  add it to the wrong guesses
@@ -102,7 +132,7 @@ function App() {
         return [...prev, key];
       });
     },
-    [allGuesses, word]
+    [allGuesses, smartWord, word]
   );
 
   // Use a side effect to attach a keyboard event listener so we can capture
@@ -137,10 +167,14 @@ function App() {
           justifyContent: "center",
         }}
       >
-        {word.split("").map((letter, i) => {
+        {smartWord.map((letter, i) => {
           return (
             <Typography key={`letter-${i}`} variant="h1" component="p">
-              {letter}
+              {/**
+               * If statement saying if the character has been revealed render
+               *  the character otherwise render an underscore
+               */}
+              {letter.revealed ? letter.char : "_"}
             </Typography>
           );
         })}
