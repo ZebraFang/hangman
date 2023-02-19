@@ -1,3 +1,4 @@
+// The you lost modal similar to the help modal, most of the code is from React material UI
 import { Box, Typography, Modal, Divider } from "@mui/material";
 
 const style = {
@@ -30,6 +31,7 @@ function YouLost(props) {
           </Typography>
           <Divider sx={{ my: 1 }} />
           <Typography variant="h4" component="p">
+            {/* Passing the answer from the random selected word chosen through the pickRandomWord function on App.js*/}
             The word was: {props.word}
           </Typography>
         </Box>

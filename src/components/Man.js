@@ -25,6 +25,7 @@ const levels = [
 ];
 
 function Man({ numberOfWrongGuesses }) {
+  // The man renders according to the number of wrong guesses. The wrong guesses number corresponds to the index of the levels array index
   return <img src={levels[numberOfWrongGuesses]} alt="man" />;
 }
 

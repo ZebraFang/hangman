@@ -98,8 +98,6 @@ function App() {
   // This is the function we call each time a key is pressed on the keyboard
   const handleKeyPress = useCallback(
     ({ key }) => {
-      console.log({ key });
-
       // check whether we've guessed this letter before,
       //  and if already guessed, ignore it!
       if (allGuesses.includes(key)) {
@@ -166,7 +164,7 @@ function App() {
       </Typography>
 
       <Help />
-
+      {/* Sets the wind condition and runs resetGame function */}
       {revealedCount === smartWord.length ? (
         <YouWon word={word} resetGame={resetGame} />
       ) : null}
@@ -174,7 +172,7 @@ function App() {
       {wrongGuesses.length === 10 ? (
         <YouLost word={word} resetGame={resetGame} />
       ) : null}
-
+      {/* Passing the props of number of wrong guesses to Man.js */}
       <Man numberOfWrongGuesses={wrongGuesses.length} />
 
       <Box
